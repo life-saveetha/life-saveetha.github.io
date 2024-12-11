@@ -1,0 +1,892 @@
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" /><meta name="apple-mobile-web-app-capable" content="yes" /><title>
+    SIMATS Web App
+</title><link href="colour.css" rel="stylesheet">
+    <script src="j1.js"></script>
+    <script src="j2.js"></script>
+    <style>
+        #footerTabs {
+            background: #FFF -webkit-radial-gradient(circle, #FFF, #dee2e4);
+        }
+
+        .ui-listview sup {
+            font-size: 0.6em;
+            color: #cc0000;
+        }
+        
+    </style>
+    
+</head>
+<body>
+    <form method="post" action="./Orders.aspx?id=109" id="form1">
+<div class="aspNetHidden">
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="P3Ut0B5TyIsfg+8Yjc+3TthltZqzWLgjt+9qzj1LOBfKLTuEhO9XTEdJca3/clsuf8g5rutl3tIU5ZmKz6libY1GCRllTYu/AcxghAqrrWA=" />
+</div>
+
+<div class="aspNetHidden">
+
+    <input type="hidden" name="__VIEWSTATEGENERATOR" id="__VIEWSTATEGENERATOR" value="9B1469F9" />
+</div>
+        <!-- /page content -->
+        <div>
+            
+    <!-- /header -->
+    <div data-role="header" data-position="fixed">
+        <h1 id="hpageheader">Order Status</h1>
+        <a href="FoodCourts.aspx" id="hbackloc" rel="external" data-icon="carat-l" data-iconpos="notext">Back</a>
+        <a href="#" onclick="window.location.reload()" data-icon="back" data-iconpos="notext">Refresh</a>
+    </div>
+    <form method="post" action="./OrderStatus.aspx" id="form1">
+<div class="aspNetHidden">
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="VUU1BtASCkZZCVO8HnZ7NTcPO8mAALlZVUCyLMdL7NrXy9WaQgvOcNOWsfRxsq7jTqAofXJMFi0T6bXqTC8ErTMvCxLeC6/xQNdNo3yU5xY=">
+</div>
+
+<div class="aspNetHidden">
+
+    <input type="hidden" name="__VIEWSTATEGENERATOR" id="__VIEWSTATEGENERATOR" value="C5AA505B">
+</div>
+        <!-- /page content -->
+        <div>
+            
+    <!-- /header -->
+    <div data-role="header" data-position="fixed" role="banner" class="ui-header ui-bar-inherit ui-header-fixed slidedown">
+        <h1 id="hpageheader" class="ui-title" role="heading" aria-level="1">Order Status</h1>
+        <a href="Index.aspx" rel="external" data-icon="carat-l" data-iconpos="notext" class="ui-link ui-btn-left ui-btn ui-icon-carat-l ui-btn-icon-notext ui-shadow ui-corner-all" data-role="button" role="button">Back</a>
+        <a href="#" onclick="window.location.reload()" data-icon="back" data-iconpos="notext" class="ui-link ui-btn-right ui-btn ui-icon-back ui-btn-icon-notext ui-shadow ui-corner-all" data-role="button" role="button">Refresh</a>
+    </div>
+    <!-- /header -->
+    <!-- /content -->
+    <div>
+        <div data-role="content" class="ui-content" role="main">
+
+            <div class="" style="margin-bottom: 60px;">
+                <ul data-role="listview" data-inset="false" id="ollistview" class="ui-listview">
+                <li class="ui-first-child ui-last-child"><a onclick="view(23093584);" class="ui-btn ui-btn-icon-right ui-icon-carat-r"><h1>Order No: 40967175</h1><p><strong>Restaurant: MALAYSIAN PAROTTA</strong></p><p><strong>Order On: Dec  10 2024 11:35AM</strong></p><p>Total: 60</p><p>Status: Waiting for acceptance</p><p>ETA: NA min</p></a></li></ul>
+            </div>
+
+            <input type="hidden" name="ctl00$ContentPlaceHolder1$hdnstudentid" id="ContentPlaceHolder1_hdnstudentid" value="21150">
+            <br>
+            
+        </div>
+
+        <div style="display: none;" id="popupadd-placeholder"><!-- placeholder for popupadd --></div>
+
+    </div>
+    <!-- /content -->
+
+    <script>
+
+        $(document).ready(function () {
+
+            $.ajax({
+                type: "GET",
+                url: "/api/HotelAdmin/GetHotelRequestDetails",
+                data: { Mode: "OrderStatus", MasterId: "", ActionId1: "", ActionId2: "", ActionId3: "", UserId: $("#ContentPlaceHolder1_hdnstudentid").val() },
+                async: false,
+                dataType: "json",
+                success: function (data) {
+                    if (data.Table.length > 0) {
+                        $.each(data.Table, function (key, value) {
+                            $('#ollistview').append('<li><a onclick="view(' + value.OrderId + ');"><h1>Order No: ' + value.OrderRef + '</h1><p><strong>Restaurant: ' + value.HotelName + '</strong></p><p><strong>Order On: ' + value.OrderedOn + '</strong></p><p>Total: ' + value.TotalPrice + '</p><p>Status: ' + value.OrderStatus + '</p><p>ETA: ' + value.ETA + ' min</p></a></li>');
+                        });
+                    }
+
+                    $("#ollistview").listview("refresh");
+                }
+            });
+
+        });
+
+        function view(id) {
+
+            $("#popupadd").popup("open");
+
+            $('#tbltritem').empty();
+
+            $.ajax({
+                type: "GET",
+                url: "/api/HotelAdmin/GetHotelRequestDetails",
+                data: { Mode: "OrderDetailsbyId", MasterId: id, ActionId1: "", ActionId2: "", ActionId3: "", UserId: $("#ContentPlaceHolder1_hdnstudentid").val() },
+                async: false,
+                dataType: "json",
+                success: function (data) {
+                    if (data.Table.length > 0) {
+                        var vitemids = '';
+                        var vqty = '';
+                        var vtotalprice = 0;
+                        var sno = 1;
+                        $.each(data.Table, function (key, value) {
+
+                            vtotalprice += (value.Qty * value.UnitPrice);
+
+                            $('#tbltritem').append('<tr><td>' + sno + '</td><td>' + value.ItemName + '</td><td>' + value.UnitPrice + '</td><td>' + value.Qty + '</td><td>' + (parseInt(value.Qty) * parseInt(value.UnitPrice)) + '</td></tr>');
+
+                            sno++;
+                            
+                            $('#horderno').text('' + value.OrderRef);
+                            $('#horderon').text('' + value.OrderedOn);
+                            $('#hstatus').text(''+value.OrderStatus);
+                            $('#heta').text('ETA: '+value.ETA+' min');
+                            $('#hhotelname').text('' + value.HotelName);
+                        });
+
+                        $('#htotal').text('Total: '+vtotalprice);
+
+                    }
+
+                    $("#ollistview").listview("refresh");
+                }
+            });
+
+        }
+
+        function closepopup() {
+            $("#popupadd").popup("close");
+        }
+    </script>
+    <style>
+        .ui-table-columntoggle-btn .ui-btn .ui-btn-a .ui-corner-all .ui-shadow .ui-mini{
+            display:none;
+        }
+    </style>
+
+        </div>
+        <!-- /footer -->
+        <br>
+        <div data-role="footer" data-position="fixed" role="contentinfo" class="ui-footer ui-bar-inherit ui-footer-fixed slideup">
+            <div data-role="navbar" data-iconpos="top" class="ui-navbar" role="navigation">
+                <ul class="ui-grid-b">
+                    <li class="ui-block-a"><a href="../Food/Index.aspx" rel="external" data-icon="home" class="ui-link ui-btn ui-icon-home ui-btn-icon-top">Home</a></li>
+                    <li class="ui-block-b"><a href="../Food/MyProfile.aspx" rel="external" data-icon="info" class="ui-link ui-btn ui-icon-info ui-btn-icon-top">Profile</a></li>
+                   
+                    <li class="ui-block-c"><a href="../Login.aspx" rel="external" data-icon="lock" class="ui-link ui-btn ui-icon-lock ui-btn-icon-top">Logoff</a></li>
+                </ul>
+            </div>
+        </div>
+        <!-- /footer -->
+        <div id="dvmodelsuccess" role="dialog" class="ui-dialog-contain ui-overlay-shadow ui-corner-all" style="position: absolute; top: 55%; left: 4%; opacity: 500; display: none;">
+        </div>
+        <!-- /page content -->
+
+        <script type="text/javascript">
+
+            $(document).on("mobileinit", function () {
+                $.mobile.defaultPageTransition = "slide";
+            });
+
+            $(document).ready(function () {
+
+                $("#dvmodelsuccess").fadeTo(2000, 500).slideUp(500, function () {
+                    $("#dvmodelsuccess").slideUp(1000);
+                });
+            });
+        </script>
+    </form>
+    <!-- /header -->
+    <!-- /content -->
+    <div>
+        <div data-role="content">
+            <div class="">
+                <span id="hhotelname"></span>
+                <br />
+                <span id="hfoodtype" style="font-size: 12px; font-style: italic; color: #808080;"></span>
+
+                <span style="border-bottom: 1px solid #cdcdcd;"></span>
+
+                <div style="position: fixed; top: 5%; width: 100%; padding-right: 5px; right: -6px; display: none;" id="dvorderdetails">
+                    <div style="background-color: #cdcdcd;">
+                        <a href="OrderStatus.aspx" rel="external" class="ui-btn ui-state-persist ui-link ui-btn" style="background: #ff6a00; color: #fff;">View order details:
+                        <span style="font-size: 24px; color: #fff;" id="hviewtotalcart">0</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <br />
+<!--             <div class="" style="margin-bottom: 60px;">
+                <ul data-role="listview" data-inset="false" id="ollistview" data-filter="true" data-filter-reveal="false" data-filter-placeholder="Search ...">
+                </ul>
+            </div> -->
+            <!-- /footer -->
+            <br />
+            <div style="position: fixed; top: 83%; width: 100%; padding-right: 5px; right: -6px;">
+                <!-- <div style="background-color: #38c;">
+                    <a onclick="viewallcartitem();" class="ui-btn-active ui-state-persist ui-link ui-btn">Total Cart value:
+                        <span style="font-size: 24px;" id="htotalcart">0</span>
+                    </a>
+                </div>
+            </div> -->
+
+            <!-- /footer -->
+            <input type="hidden" name="ctl00$ContentPlaceHolder1$hdnmasterid" id="ContentPlaceHolder1_hdnmasterid" value="0" />
+            <input type="hidden" name="ctl00$ContentPlaceHolder1$hdnhotelid" id="ContentPlaceHolder1_hdnhotelid" value="0" />
+            <input type="hidden" name="ctl00$ContentPlaceHolder1$hdnitems" id="ContentPlaceHolder1_hdnitems" />
+            <input type="hidden" name="ctl00$ContentPlaceHolder1$hdnitemcount" id="ContentPlaceHolder1_hdnitemcount" />
+            <input type="hidden" name="ctl00$ContentPlaceHolder1$hdntotalprice" id="ContentPlaceHolder1_hdntotalprice" value="0" />
+            <input type="hidden" name="ctl00$ContentPlaceHolder1$hdnstudentid" id="ContentPlaceHolder1_hdnstudentid" value="21150" />
+            <input type="hidden" name="ctl00$ContentPlaceHolder1$hdnavailablecredit" id="ContentPlaceHolder1_hdnavailablecredit" value="0" />
+        </div>
+        <!-- <div  style="max-width: 952px; top: 201.8px; left: 315px;"><div  style="width: 350px;" >
+            <div data-role="header" data-theme="a"  role="banner">
+                <h1 class="ui-title" role="heading" aria-level="1">Status Details</h1>
+            </div>
+            <div role="main"  style="text-align: center;">
+                <h3 id="hitemname">9679679</h3>
+                <h3 id="hitemname">MALAYSIAN PAROTTA</h3>
+
+                <small id="hitemname">Dec 04 2024 11:20AM</small>
+                <br>
+                <small id="hitemname">Total: 2930</small>
+                <br>
+                <small id="hitemname">Waiting for acceptance</small>
+                <br>
+                <small id="hunitprice">ETA: NA min</small>
+                <br>
+                <a href="#"  onclick="minusselecteditem();"></a>
+                <span id="aitemcount">0</span>
+                <a href="#" onclick="addselecteditem();"></a>
+                <button type="button" id="btnAdd" data-theme="b"  aria-disabled="false" onclick="okitem();">close</button>
+            
+            </div> -->
+        </div></div>
+
+
+        <div data-role="popup" id="popupadd" data-theme="a" style="width: 350px;">
+            <div data-role="header" data-theme="a" class="ui-corner-top">
+                <h1>Order Details</h1>
+            </div>
+            <div role="main" class="ui-corner-bottom ui-content" style="text-align: center;">
+                <h2 id="hitemname">40967175</h2>
+                <h2 id="hunitprice">MALAYSIAN PAROTTA </h2>
+                <a href="#"  onclick="minusselecteditem();"></a>
+                <p id="horderon">Dec  7 2024 12:01PM</p>
+                <p id="htotal">Total: 60</p>
+                <p id="hstatus">Waiting for acceptance</p>
+                <p id="heta">ETA: NA min</p>
+                <h5 style="border-bottom:solid 1px #808080"></h5>
+                <div style="display: none;" id="table-column-toggle-popup-placeholder"><!-- placeholder for table-column-toggle-popup --></div>
+                <!-- <a href="#table-column-toggle-popup" class="ui-table-columntoggle-btn ui-btn ui-btn-a ui-corner-all ui-shadow ui-mini" data-rel="popup"></a> -->
+                <table data-role="table" id="table-column-toggle" data-mode="columntoggle" data-column-btn-text="" class="ui-table ui-table-columntoggle">
+                    <thead>
+                        <tr>
+                            <th data-colstart="1">Sno</th>
+                            <th data-colstart="2">Item</th>
+                            <th data-colstart="3">Price</th>
+                            <th data-colstart="4">Qty</th>
+                            <th data-colstart="5">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbltritem"><tr><td></td><td></td><td></td><td></td><td></td></tr></tbody>
+                    <tbody id="tbltritem"><tr><td>1</td><td>Veg Noodles</td><td>60</td><td>1</td><td>60</td></tr></tbody>
+                
+                </table>
+
+                <a href="#"  onclick="addselecteditem();"></a>
+                <button type="button" id="btnAdd" data-theme="b"  aria-disabled="false" onclick="okitem();">Close</button>
+            </div>
+        </div>
+        <div style="max-width: 952px; top: 201.799px; left: 315px;"><div data-role="popup" id="popupadd" data-theme="a" style="width: 350px;" >
+            <div data-role="header" data-theme="a" role="banner">
+                <h1 class="ui-title" role="heading" aria-level="1">Item add</h1>
+            </div>
+            <div role="main" style="text-align: center;">
+                <h4 id="hitemname">Item: Veg Noodles</h4>
+                <h4 id="hunitprice">Unit Price: 60</h4>
+                <a href="#" onclick="minusselecteditem();"></a>
+                <span id="aitemcount">0</span>
+                <a href="#"  onclick="addselecteditem();"></a>
+                <button type="button" id="btnAdd" data-theme="b"  aria-disabled="false" onclick="okitem();" fdprocessedid="486s2">Add to Cart</button>
+                <button type="button" id="btnClose" data-theme="c" aria-disabled="false" onclick="closepopup();" fdprocessedid="lactbf">Cancel</button>
+            </div>
+<div  id="popupshowitems-popup"><div data-role="popup" id="popupshowitems" data-theme="a" style="width: 450px;" >
+            <div data-role="header" data-theme="a" class="ui-corner-top ui-header ui-bar-a" role="banner">
+                <h1 class="ui-title" role="heading" aria-level="1">Payment </h1>
+            </div>
+            <div role="main" class="ui-corner-bottom" style="text-align: center; padding: 4px;">
+
+                <div style="background-color: #ff0000;">
+                    <a href="#" class="ui-btn-active ui-state-persist ui-link ui-btn" style="background-color: chocolate;">Available Amount:
+                        <span style="font-size: 24px;" id="havailablecredit">1</span>
+                    </a>
+                </div>
+
+                <div style="display: none;" id="table-column-toggle-popup-placeholder"><!-- placeholder for table-column-toggle-popup --></div><a href="#table-column-toggle-popup" class="ui-table-columntoggle-btn ui-btn ui-btn-a ui-corner-all ui-shadow ui-mini" data-rel="popup"></a><table data-role="table" id="table-column-toggle" data-mode="columntoggle" data-column-btn-text="" class="ui-table ui-table-columntoggle">
+                    <thead>
+                        <tr>
+                            <th data-colstart="1">Sno</th>
+                            <th data-colstart="2">Item</th>
+                            <th data-colstart="3">Price</th>
+                            <th data-colstart="4">Qty</th>
+                            <th data-colstart="5">Total</th>
+                            <th data-colstart="6">Remove</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbltritem">
+                    </tbody>
+                </table>
+                <div id="dvservicepanel" style="display: none;">
+                    <div style="background-color: #fff; display: block;">
+                        <span>Service Type</span>
+                        <div class="ui-select"><div id="ddlservicetype-button" class="ui-btn ui-icon-carat-d ui-btn-icon-right ui-corner-all ui-shadow"><span>Inroom dining (Self Service)</span><select id="ddlservicetype">
+                            <option value="1">Inroom dining (Self Service)</option>
+                            <option value="2">Room service</option>
+                        </select></div></div>
+                    </div>
+                    <div id="dvlocationpanel" style="background-color: #fff; display: none;">
+                        <span>Location &amp; Mobile</span>
+                        <textarea id="txtlocation" rows="2" class="ui-input-text ui-shadow-inset ui-body-inherit ui-corner-all ui-textinput-autogrow"></textarea>
+                    </div>
+                </div>
+                <div style="background-color: #ff0000;">
+                    <a onclick="savecartitem();" class="ui-btn-active ui-state-persist ui-link ui-btn" style="background-color: #ff0000;">Pay Rs:
+                        <span style="font-size: 24px;" id="hpaytotalcart">0</span>
+                    </a>
+                </div>
+
+                <button type="button" id="btnshowClose" data-theme="c" class="ui-btn-hidden ui-btn ui-btn-c ui-shadow ui-corner-all" aria-disabled="false" onclick="closecartpopup();">Close</button>
+            </div>
+        </div></div>
+<div ><div data-role="popup" id="popupprogress" data-theme="a" style="width: 350px;" >
+            <div data-role="header" data-theme="a" class="ui-corner-top ui-header ui-bar-a" role="banner">
+                <h1 class="ui-title" role="heading" aria-level="1">Payment initiated</h1>
+            </div>
+            <div role="main" class="ui-corner-bottom ui-content" style="text-align: center;">
+                <h2>Payment initiating... Please wait...</h2>
+            </div>
+        </div></div>
+<div id="popupshowitems-popup"><div data-role="popup" id="popupshowitems" data-theme="a" style="width: 450px;" >
+            <div data-role="header" data-theme="a" class="ui-corner-top ui-header ui-bar-a" role="banner">
+                <h1 class="ui-title" role="heading" aria-level="1">Payment </h1>
+            </div>
+            <div role="main" class="ui-corner-bottom" style="text-align: center; padding: 4px;">
+
+                <div style="background-color: #ff0000;">
+                    <a href="#" class="ui-btn-active ui-state-persist ui-link ui-btn" style="background-color: chocolate;">Available Amount:
+                        <span style="font-size: 24px;" id="havailablecredit">1</span>
+                    </a>
+                </div>
+
+                <div style="display: none;" id="table-column-toggle-popup-placeholder"><!-- placeholder for table-column-toggle-popup --></div><a href="#table-column-toggle-popup" class="ui-table-columntoggle-btn ui-btn ui-btn-a ui-corner-all ui-shadow ui-mini" data-rel="popup"></a><table data-role="table" id="table-column-toggle" data-mode="columntoggle" data-column-btn-text="" class="ui-table ui-table-columntoggle">
+                    <thead>
+                        <tr>
+                            <th data-colstart="1">Sno</th>
+                            <th data-colstart="2">Item</th>
+                            <th data-colstart="3">Price</th>
+                            <th data-colstart="4">Qty</th>
+                            <th data-colstart="5">Total</th>
+                            <th data-colstart="6">Remove</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbltritem">
+                    </tbody>
+                </table>
+                <div id="dvservicepanel" style="display: none;">
+                    <div style="background-color: #fff; display: block;">
+                        <span>Service Type</span>
+                        <div class="ui-select"><div id="ddlservicetype-button" class="ui-btn ui-icon-carat-d ui-btn-icon-right ui-corner-all ui-shadow"><span>Inroom dining (Self Service)</span><select id="ddlservicetype">
+                            <option value="1">Inroom dining (Self Service)</option>
+                            <option value="2">Room service</option>
+                        </select></div></div>
+                    </div>
+                    <div id="dvlocationpanel" style="background-color: #fff; display: none;">
+                        <span>Location &amp; Mobile</span>
+                        <textarea id="txtlocation" rows="2" class="ui-input-text ui-shadow-inset ui-body-inherit ui-corner-all ui-textinput-autogrow"></textarea>
+                    </div>
+                </div>
+                <div style="background-color: #ff0000;">
+                    <a onclick="savecartitem();" class="ui-btn-active ui-state-persist ui-link ui-btn" style="background-color: #ff0000;">Pay Rs:
+                        <span style="font-size: 24px;" id="hpaytotalcart">0</span>
+                    </a>
+                </div>
+
+                <button type="button" id="btnshowClose" data-theme="c" class="ui-btn-hidden ui-btn ui-btn-c ui-shadow ui-corner-all" aria-disabled="false" onclick="closecartpopup();">Close</button>
+            </div>
+        </div></div>
+        </div></div>
+
+        <div data-role="popup" id="popupshowitems" data-theme="a" style="width: 450px;">
+            <div data-role="header" data-theme="a" class="ui-corner-top">
+                <h1>Payment </h1>
+            </div>
+            <div role="main" class="ui-corner-bottom" style="text-align: center; padding: 4px;">
+
+                <div style="background-color: #ff0000;">
+                    <a href="#" class="ui-btn-active ui-state-persist ui-link ui-btn" style="background-color: chocolate;">Available Amount:
+                        <span style="font-size: 24px;" id="havailablecredit">0</span>
+                    </a>
+                </div>
+
+                <table data-role="table" id="table-column-toggle" data-mode="columntoggle" data-column-btn-text="">
+                    <thead>
+                        <tr>
+                            <th>Sno</th>
+                            <th>Item</th>
+                            <th>Price</th>
+                            <th>Qty</th>
+                            <th>Total</th>
+                            <th>Remove</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbltritem">
+                    </tbody>
+                </table>
+                <div id="dvservicepanel" style="display: none;">
+                    <div style="background-color: #fff; display: block;">
+                        <span>Service Type</span>
+                        <select id="ddlservicetype">
+                            <option value="1">Inroom dining (Self Service)</option>
+                            <option value="2">Room service</option>
+                        </select>
+                    </div>
+                    <div id="dvlocationpanel" style="background-color: #fff; display: none;">
+                        <span>Location & Mobile</span>
+                        <textarea id="txtlocation" rows="2"></textarea>
+                    </div>
+                </div>
+                <div style="background-color: #ff0000;">
+                    <a onclick="savecartitem();"  style="background-color: #ff0000;">Pay Rs:
+                        <span style="font-size: 24px;" id="hpaytotalcart">0</span>
+                    </a>
+                </div>
+
+                <button type="button" id="btnshowClose" data-theme="c" class="ui-btn-hidden" aria-disabled="false" onclick="closecartpopup();">Close</button>
+            </div>
+        </div>
+
+        <div data-role="popup" id="popupprogress" data-theme="a" style="width: 350px;">
+            <div data-role="header" data-theme="a" class="ui-corner-top">
+                <h1>Payment initiated</h1>
+            </div>
+            <div role="main" class="ui-corner-bottom ui-content" style="text-align: center;">
+                <h2>Payment initiating... Please wait...</h2>
+            </div>
+        </div>
+    </div>
+    <!-- /content -->
+
+    <script>
+
+        var arrlist = [];
+        var vuniq = null;
+        var jsonObjwork = [];
+
+        $(document).ready(function () {
+
+            if (getUrlVars() != '' && getUrlVars() != null) {
+
+                binditems(getUrlVars());
+
+                $("#hbackloc").attr("href", "Orderbyfc.aspx?id=" + getfcidUrlVars() + "");
+            }
+
+            $("#ddlservicetype").change(function () {
+                if ($("#ddlservicetype").val() == 2) {
+                    $('#dvlocationpanel').show();
+                }
+                else {
+                    $('#dvlocationpanel').hide();
+                    $('#txtlocation').empty();
+                    $('#txtlocation').text('');
+                }
+            });
+
+        });
+
+        function getUrlVars() {
+            var vars = [], hash;
+            var varvalue = 0;
+            var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+            for (var i = 0; i < hashes.length; i++) {
+                hash = hashes[i].split('=');
+                vars.push(hash[0]);
+                vars[hash[0]] = hash[1];
+            }
+            return vars["id"];
+        }
+
+        function getfcidUrlVars() {
+            var vars = [], hash;
+            var varvalue = 0;
+            var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+            for (var i = 0; i < hashes.length; i++) {
+                hash = hashes[i].split('=');
+                vars.push(hash[0]);
+                vars[hash[0]] = hash[1];
+            }
+            return vars["fcid"];
+        }
+
+        function binditems(id) {
+
+            $("#ContentPlaceHolder1_hdnhotelid").val(id);
+
+            $.ajax({
+                type: "GET",
+                url: "/api/HotelAdmin/GetHotelRequestDetails",
+                data: { Mode: "AllItemsByHotel", MasterId: id, ActionId1: "", ActionId2: "", ActionId3: "", UserId: $("#ContentPlaceHolder1_hdnstudentid").val() },
+                async: false,
+                dataType: "json",
+                success: function (data) {
+
+                    if (data.Table != null) {
+                        if (data.Table.length > 0) {
+                            $.each(data.Table, function (key, value) {
+                                $('#ollistview').append('<li data-icon="plus"><a onclick="additem(' + value.ItemId + ');"><img src="' + value.ImagePath + '"  style="padding:10px;" /><h2 id=hitem' + value.ItemId + '>' + value.ItemName + '</h2><p><strong>' + value.ItemCategory + '</strong></p><p><strong>Unit: ' + value.Unit + '</strong></p><p><strong>Unit Price: ' + value.UnitPrice + '</strong></p><p id=hprice' + value.ItemId + ' style="display:none;">' + value.UnitPrice + '</p></a> </li>');
+                            });
+                        }
+
+                        $("#ollistview").listview("refresh");
+                    }
+
+                    if (data.Table1.length > 0) {
+                        $.each(data.Table1, function (key, value) {
+
+                            $('#hhotelname').text(value.HotelName);
+                            $('#hfoodtype').text("Food: " + value.FoodTypes + " & Mobile: " + value.MobileNo);
+
+                            if (value.IsDelivery == true) {
+                                $('#dvservicepanel').show();
+                                $('#txtlocation').empty();
+                                $('#txtlocation').text('');
+                                $("#ddlservicetype").val("1");
+                            }
+                            else {
+                                $('#dvservicepanel').hide();
+                                $('#txtlocation').empty();
+                                $('#txtlocation').text('');
+                                $("#ddlservicetype").val("1");
+                            }
+                        });
+                    }
+
+                    if (data.Table2.length > 0) {
+                        $.each(data.Table2, function (key, value) {
+
+                            $("#ContentPlaceHolder1_hdnavailablecredit").val(value.AvailableCreditamount);
+
+                            $('#havailablecredit').text(value.AvailableCreditamount);
+
+                        });
+                    }
+
+                    if (data.Table3.length > 0) {
+                        $.each(data.Table3, function (key, value) {
+                            //$('#dvorderdetails').show();
+
+                            $('#hviewtotalcart').text(value.TotalPrice);
+                        });
+                    }
+                }
+            });
+
+        }
+
+        var itemcount = 0;
+        var itemid = 0;
+        var itemprice = 0;
+
+        function addselecteditem() {
+
+            itemcount += 1;
+
+            $('#aitemcount').text(itemcount);
+        }
+
+        function minusselecteditem() {
+
+            if (itemcount > 0) {
+                itemcount = itemcount - 1;
+
+                $('#aitemcount').text(itemcount);
+            }
+        }
+
+        function additem(id) {
+
+            itemid = id;
+            itemcount = 0;
+
+            $("#popupadd").popup("open");
+
+            $('#hitemname').text('Item: ' + $('#hitem' + id).text());
+
+            $('#hunitprice').text('Unit Price: ' + $('#hprice' + id).text());
+
+            $('#aitemcount').text('0');
+
+            itemprice = $('#hprice' + id).text();
+        }
+
+        var jsontblResult = [];
+
+        function okitem() {
+
+            if (itemcount > 0) {
+
+                arrlist.pop(itemid);
+                DeleteRow('', itemid);
+
+                arrlist.push(itemid);
+
+                refitem = {}
+                refitem["itemid"] = itemid;
+                refitem["itemcount"] = itemcount;
+                refitem["itemprice"] = itemprice;
+                refitem["itemname"] = $('#hitem' + itemid).text();
+
+                jsonObjwork.push(refitem);
+
+                //jsontblResult = [];
+
+                if (jsonObjwork != null) {
+
+                    var vitemids = '';
+                    var vqty = '';
+                    var vtotalprice = 0;
+                    var sno = 1;
+
+                    $.each(jsonObjwork, function (key, value) {
+
+                        //jsontblResult.push([sno, value.itemname, value.itemcount, value.itemprice, (parseInt(value.itemcount) * parseInt(value.itemprice))]);
+
+                        vitemids += value.itemid + ',';
+                        vqty += value.itemcount + ',';
+
+                        vtotalprice += (value.itemcount * value.itemprice);
+
+                        sno++;
+                    });
+
+                    $("#ContentPlaceHolder1_hdnitems").val(vitemids)
+                        $("#ContentPlaceHolder1_hdnitemcount").val(vqty)
+                    $('#htotalcart').text(vtotalprice);
+                }
+            }
+
+            $("#popupadd").popup("close");
+
+        }
+
+        function viewallcartitem() {
+
+            $('#tbltritem').empty();
+
+            $('#dvlocationpanel').hide();
+            $('#txtlocation').empty();
+            $('#txtlocation').val('');
+            $("#ddlservicetype").val('1');
+
+            if (jsonObjwork != null) {
+
+                var vitemids = '';
+                var vqty = '';
+                var vtotalprice = 0;
+                var sno = 1;
+                $.each(jsonObjwork, function (key, value) {
+
+                    vitemids += value.itemid + ',';
+                    vqty += value.itemcount + ',';
+
+                    vtotalprice += (value.itemcount * value.itemprice);
+
+                    $('#tbltritem').append('<tr><td style="padding:10px;">' + sno + '</td><td style="padding:10px;">' + value.itemname + '</td><td style="padding:10px;">' + value.itemprice + '</td><td style="padding:10px;">' + value.itemcount + '</td><td style="padding:10px;">' + (parseInt(value.itemcount) * parseInt(value.itemprice)) + '</td><td><a class="ui-btn ui-shadow ui-corner-all ui-icon-delete ui-btn-icon-notext ui-btn-b ui-btn-inline" onclick="deleteitem(' + value.itemid + ')"></a></td></tr>');
+
+                    sno++;
+                });
+
+                $("#ContentPlaceHolder1_hdnitems").val(vitemids)
+                    $("#ContentPlaceHolder1_hdnitemcount").val(vqty)
+
+                    $("#ContentPlaceHolder1_hdntotalprice").val(vtotalprice)
+
+                $('#hpaytotalcart').text(vtotalprice);
+                $('#htotalcart').text(vtotalprice);
+            }
+
+            $("#popupshowitems").popup("open");
+
+        }
+
+
+
+        function savecartitem() {
+
+            $("#popupshowitems").popup("close");
+            $("#popupprogress").popup("open");
+
+            var msgsuccess = '';
+
+            var totalcartvalue = $("#ContentPlaceHolder1_hdntotalprice").val();
+
+                var availablebalance = $("#ContentPlaceHolder1_hdnavailablecredit").val();
+
+                if (parseFloat(totalcartvalue) > 0) {
+
+                    if (parseFloat(availablebalance) >= parseFloat(totalcartvalue)) {
+
+                        var jsonCustomidentifier = [];
+
+                        var lsttotalprice = 0;
+
+                        $.each(jsonObjwork, function (i, item) {
+
+                            var appdata = {};
+
+                            appdata.hotelid = $("#ContentPlaceHolder1_hdnhotelid").val();
+                            appdata.itemid = item.itemid;
+                            appdata.itemcount = item.itemcount;
+                            appdata.itemprice = item.itemprice;
+                            appdata.totalprice = $("#ContentPlaceHolder1_hdntotalprice").val();
+                            appdata.itemname = '';
+                            appdata.createdby = $("#ContentPlaceHolder1_hdnstudentid").val();
+                            appdata.servicetype = $("#ddlservicetype").val();
+                            appdata.deliverylocation = $("#txtlocation").val();
+                            lsttotalprice += (item.itemcount * item.itemprice);
+
+                            jsonCustomidentifier.push(appdata);
+
+                            $("#hviewtotalcart").text($("#ContentPlaceHolder1_hdntotalprice").val());
+                        });
+
+                        if (lsttotalprice == $("#ContentPlaceHolder1_hdntotalprice").val()) {
+
+                            $.ajax({
+                                type: 'POST',
+                                url: "Orders.aspx/SaveDetail",
+                                data: "{LstDetails:" + JSON.stringify(jsonCustomidentifier) + "}",
+                                contentType: 'application/json; charset=utf-8',
+                                dataType: 'json',
+                                success: function (r) {
+                                    msgsuccess = r.d;
+
+                                    if (msgsuccess == "Error") {
+                                        alert('error occured');
+
+                                        setTimeout(function () {
+                                            $("#popupprogress").popup("close");
+                                        }, 3000);
+
+                                    }
+                                    else if (msgsuccess == "malpractice") {
+
+                                        alert('account locked due to malpractice activity.');
+                                        window.location = "acclock.aspx";
+                                    }
+                                    else if (msgsuccess == "LowBalance") {
+                                        alert('Low balance. Please add the balance to wallet');
+
+                                        setTimeout(function () {
+                                            $("#popupprogress").popup("close");
+                                        }, 3000);
+
+                                    }
+                                    else {
+
+                                        alert('Order succesfully initiated');
+
+                                        setTimeout(function () {
+                                            $("#popupprogress").popup("close");
+                                        }, 3000);
+
+                                        $("#popupshowitems").popup("close");
+                                        //$("#dvorderdetails").show();
+
+                                        jsonObjwork = [];
+
+                                        $("#ContentPlaceHolder1_hdntotalprice").val('0');
+
+                                        $("#ContentPlaceHolder1_hdnitems").val('')
+                                        $("#ContentPlaceHolder1_hdnitemcount").val('')
+
+                                        $('#htotalcart').text('0');
+                                        $('#hpaytotalcart').text('0');
+                                    }
+                                }
+                            });
+
+                    }
+                    else {
+                        alert('Total Cart value and items total amount not matching please reset the item details.');
+                    }
+                }
+                else {
+                    alert('Low balance in your wallet. Please load the balance to proceed the order.');
+                }
+            }
+            else {
+                alert('Select item to initiate order.');
+            }
+        }
+
+        function deleteitem(itemid) {
+            FindAndRemove(jsonObjwork, 'itemid', itemid);
+            viewallcartitem();
+        }
+
+        function closepopup() {
+            $("#popupadd").popup("close");
+        }
+
+        function closecartpopup() { $("#popupshowitems").popup("close"); }
+
+        //delete item details
+        function DeleteRow(e, id) {
+
+            FindAndRemove(jsonObjwork, 'itemid', id);
+        }
+
+        // Generate random id for custom filed add
+        function uniqId() {
+            return Math.round(new Date().getTime() + (Math.random() * 100));
+        }
+
+        // To delete added fields in Json object
+        function FindAndRemove(array, property, value) {
+
+            $.each(array, function (index, result) {
+                if (result['itemid'] == value) {
+                    //Remove from array
+                    array.splice(index, 1);
+                    return false;
+                }
+            });
+
+        }
+    </script>
+
+        </div>
+        <!-- /footer -->
+        <br />
+        <div data-role="footer" data-position="fixed">
+            <div data-role="navbar" data-iconpos="top">
+                <ul>
+                    <li><a href="../Food/Index.aspx" rel="external" data-icon="home">Home</a></li>
+                    <li><a href="../Food/MyProfile.aspx" rel="external" data-icon="info">Profile</a></li>
+                   
+                    <li><a href="../Login.aspx" rel="external" data-icon="lock">Logoff</a></li>
+                </ul>
+            </div>
+        </div>
+        <!-- /footer -->
+        <div id="dvmodelsuccess" role="dialog" class="ui-dialog-contain ui-overlay-shadow ui-corner-all" style="display: none; position: absolute; top: 55%; left: 4%;">
+        </div>
+        <!-- /page content -->
+
+        <script type="text/javascript">
+
+            $(document).on("mobileinit", function () {
+                $.mobile.defaultPageTransition = "slide";
+            });
+
+            $(document).ready(function () {
+
+                $("#dvmodelsuccess").fadeTo(2000, 500).slideUp(500, function () {
+                    $("#dvmodelsuccess").slideUp(1000);
+                });
+            });
+        </script>
+    </form>
+</body>
+</html>
+
